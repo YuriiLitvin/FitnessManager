@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EF_HomeWork_4_CORE.Entity
+namespace FintessManager.Data.Entity
 {
     public class Gym : BaseEntity
     {

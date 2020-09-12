@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EF_HomeWork_4_CORE.Migrations
+namespace FintessManager.Data.Migrations
 {
     public partial class MyFirstMigration : Migration
     {

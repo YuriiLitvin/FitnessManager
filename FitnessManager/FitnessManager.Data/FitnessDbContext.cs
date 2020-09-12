@@ -1,11 +1,11 @@
-﻿using EF_HomeWork_4_CORE.Entity;
-using EF_HomeWork_4_CORE.EntityConfiguration;
+﻿using FintessManager.Data.Entity;
+using FintessManager.Data.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EF_HomeWork_4_CORE
+namespace FintessManager.Data
 {
     public class FitnessDbContext : DbContext
     {
@@ -15,10 +15,6 @@ namespace EF_HomeWork_4_CORE
 
         public DbSet<Workout> Workouts { get; set; }
 
-        //public FitnessDbContext()
-        //{
-        //    //Database.EnsureCreated();
-        //}
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
         {

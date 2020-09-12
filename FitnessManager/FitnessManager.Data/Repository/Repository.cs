@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
+using FintessManager.Data.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EF_HomeWork_4_CORE
+
+namespace FintessManager.Data
 {
     public abstract class Repository<T> : IRepository<T> where T : BaseEntity
     {

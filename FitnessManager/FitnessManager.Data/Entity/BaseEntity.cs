@@ -1,9 +1,9 @@
-﻿using EF_HomeWork_4_CORE.Entity;
+﻿using FintessManager.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EF_HomeWork_4_CORE
+namespace FintessManager.Data.Entity
 {
     public abstract class BaseEntity 
     {

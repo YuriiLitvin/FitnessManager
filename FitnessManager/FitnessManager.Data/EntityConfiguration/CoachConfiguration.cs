@@ -1,9 +1,9 @@
-﻿using EF_HomeWork_4_CORE.Entity;
+﻿using FintessManager.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
-namespace EF_HomeWork_4_CORE.EntityConfiguration
+namespace FintessManager.Data.EntityConfiguration
 {
     public class CoachConfiguration : IEntityTypeConfiguration<Coach>
     {
