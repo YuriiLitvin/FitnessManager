@@ -9,6 +9,9 @@ namespace FintessManager.Data
 {
     public class FitnessDbContext : DbContext
     {
+        public FitnessDbContext(DbContextOptions<FitnessDbContext> options) : base(options) { }
+        
+        
         public  DbSet<Coach> Coaches { get; set; }
 
         public DbSet<Gym> Gyms { get; set; }
@@ -18,11 +21,7 @@ namespace FintessManager.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
         {
-            var connectingString = @"Data Source=DESKTOP-S7BNTGV; 
-                                     Initial Catalog=FitnessDb; 
-                                     Integrated Security=True";
             
-            optionsBuilder.UseSqlServer(connectingString);
         }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)

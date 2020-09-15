@@ -6,7 +6,7 @@ using System.Text;
 
 namespace FintessManager.Data.Repository
 {
-    class WorkoutRepository : Repository<Workout>
+    public class WorkoutRepository : Repository<Workout>
     {
         public WorkoutRepository(DbContext context) : base(context) { }
     }
