@@ -16,9 +16,15 @@ namespace FitnessManager.Web.Controllers
     public class CoachController : ControllerBase
     {
         private IRepository<Coach> _coachRepository;
-        public CoachController(IRepository<Coach> coachRepository)
+        
+        private FitnessDbContext _fitnessDbContext;
+
+        public CoachController(IRepository<Coach> coachRepository, FitnessDbContext fitnessDbContext)
         {
             _coachRepository = coachRepository;
+
+            _fitnessDbContext = fitnessDbContext;
+
         }
     
         [HttpGet]
@@ -34,25 +40,17 @@ namespace FitnessManager.Web.Controllers
             
         }
         
-
-        //[HttpPost]
-        //public ActionResult Post(Coach coach)
-        //{
-        //    _coachRepository.Add(coach);
-
-        //    return Created("",coach);
-        //}
-        
-        
-        //
         [HttpPost]
         public ActionResult Post(CoachModel coachModel)
         {
-            _coachRepository.Add(coachModel);
+            var coach = CreateCoach(coachModel);
 
-            return Created("", coachModel);
+            _coachRepository.Add(coach);
+            _fitnessDbContext.SaveChanges();
+            
+            return Created("", coach);
         }
-        //
+        
 
 
 
@@ -60,17 +58,30 @@ namespace FitnessManager.Web.Controllers
         public ActionResult Put(Coach coach)
         {
             _coachRepository.Update(coach);
-
+            _fitnessDbContext.SaveChanges();
             return Ok();
         }
 
+        
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
             _coachRepository.Delete(id);
-
+            _fitnessDbContext.SaveChanges();
             return Ok();
         }
-
+        
+        private Coach CreateCoach(CoachModel coachModel)
+        {
+            var coach = new Coach
+            {
+                FirstName = coachModel.FirstName,
+                LastName = coachModel.LastName,
+                Email = coachModel.Email,
+                MobileNumber = coachModel.MobileNumber,
+                TypeOfTraining = coachModel.TypeOfTraining
+            };
+            return coach;
+        }
     }
 }

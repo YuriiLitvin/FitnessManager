@@ -9,28 +9,23 @@ using System.Threading.Tasks;
 
 namespace FitnessManager.Web.Models
 {
-    public class CoachModel : BaseEntity
+    public class CoachModel 
     {
-        [Required]
-        [StringLength(50)]
-        public string FirstName { get; set; }
         
-        [Required]
-        [StringLength(50)]
+        public string FirstName { get; set; }
+
+        [Required, StringLength(255)]
         public string LastName { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        [EmailAddress]
+        [Required, StringLength(255), EmailAddress]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        [Phone]
+        
+        [Required, StringLength(255), Phone]
         public string MobileNumber { get; set; }
         
-        [Required]
-        [EnumDataType(typeof(TypeOfTraining))]
+        
+        [Required, EnumDataType(typeof(TypeOfTraining))]
         public TypeOfTraining TypeOfTraining { get; set; }
 
     }
