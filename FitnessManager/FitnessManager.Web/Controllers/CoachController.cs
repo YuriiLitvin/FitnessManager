@@ -28,18 +28,39 @@ namespace FitnessManager.Web.Controllers
         }
     
         [HttpGet]
-        public ActionResult<IEnumerable<Coach>> Get()
+        public ActionResult<IEnumerable<CoachModel>> Get()
         {
-            var items = _coachRepository.Get();
+            var coaches = _coachRepository.Get();
             
-            if(items.Any())
+            if(coaches.Any())
             {
-                return Ok(items);
+                var coachModels =  new List<CoachModel>();
+                foreach(var coach in coaches)
+                {
+                    var coachModel = CreateCoachModel(coach);
+                    coachModels.Add(coachModel);
+                }
+                
+                return Ok(coachModels);
             }
             return NoContent();
             
         }
         
+        [HttpGet("{id}")]
+        public ActionResult<CoachModel> Get(int id)
+        {
+            var coaches = _coachRepository.Get();
+
+            if (coaches.Any())
+            {
+                var coach = coaches.FirstOrDefault(_ => _.Id == id);
+                var coachModel = CreateCoachModel(coach);
+                return Ok(coachModel);
+            }
+            return NotFound();
+
+        }
         [HttpPost]
         public ActionResult Post(CoachModel coachModel)
         {
@@ -52,7 +73,7 @@ namespace FitnessManager.Web.Controllers
         }
         
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public ActionResult Put(CoachModel coachModel)
         {
             var coach = CreateCoach(coachModel);
@@ -82,5 +103,18 @@ namespace FitnessManager.Web.Controllers
             };
             return coach;
         }
+        private CoachModel CreateCoachModel(Coach coach)
+        {
+            var coachModel = new CoachModel
+            {
+                FirstName = coach.FirstName,
+                LastName = coach.LastName,
+                Email = coach.Email,
+                MobileNumber = coach.MobileNumber,
+                TypeOfTraining = coach.TypeOfTraining
+            };
+            return coachModel;
+        }
+
     }
 }
