@@ -52,11 +52,10 @@ namespace FitnessManager.Web.Controllers
         }
         
 
-
-
         [HttpPut("{id}")]
-        public ActionResult Put(Coach coach)
+        public ActionResult Put(CoachModel coachModel)
         {
+            var coach = CreateCoach(coachModel);
             _coachRepository.Update(coach);
             _fitnessDbContext.SaveChanges();
             return Ok();
