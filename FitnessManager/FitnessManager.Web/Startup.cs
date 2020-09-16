@@ -34,7 +34,7 @@ namespace FitnessManager.Web
 
             var connectionString = Configuration["ConnectionString"];
 
-            services.AddDbContext<FitnessDbContext>(options => options.UseSqlServer(Configuration["ConnectionString"]));
+            services.AddDbContext<FitnessDbContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<CoachRepository>();
             services.AddScoped<GymRepository>();
             services.AddScoped<WorkoutRepository>();
