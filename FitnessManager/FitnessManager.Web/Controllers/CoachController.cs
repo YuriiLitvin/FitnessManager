@@ -35,18 +35,18 @@ namespace FitnessManager.Web.Controllers
         }
         
 
-        [HttpPost]
-        public ActionResult Post(Coach coach)
-        {
-            _coachRepository.Add(coach);
+        //[HttpPost]
+        //public ActionResult Post(Coach coach)
+        //{
+        //    _coachRepository.Add(coach);
 
-            return Created("",coach);
-        }
+        //    return Created("",coach);
+        //}
         
         
         //
         [HttpPost]
-        public async Task<IActionResult> Post(CoachModel coachModel)
+        public ActionResult Post(CoachModel coachModel)
         {
             _coachRepository.Add(coachModel);
 

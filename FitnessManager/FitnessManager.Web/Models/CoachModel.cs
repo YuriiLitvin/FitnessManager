@@ -1,4 +1,5 @@
 ﻿using FintessManager.Data;
+using FintessManager.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FitnessManager.Web.Models
 {
-    public class CoachModel
+    public class CoachModel : BaseEntity
     {
         [Required]
         [StringLength(50)]
@@ -20,14 +21,16 @@ namespace FitnessManager.Web.Models
 
         [Required]
         [StringLength(50)]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required]
         [StringLength(50)]
+        [Phone]
         public string MobileNumber { get; set; }
         
         [Required]
-        [Int32]
+        [EnumDataType(typeof(TypeOfTraining))]
         public TypeOfTraining TypeOfTraining { get; set; }
 
     }
