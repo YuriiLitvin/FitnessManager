@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FintessManager.Data;
+using FintessManager.Data.Entity;
 using FintessManager.Data.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,12 +33,13 @@ namespace FitnessManager.Web
         {
             services.AddControllers();
 
-            var connectionString = Configuration["ConnectionString"];
+            var connectionString = Configuration.GetConnectionString("FitnessDb");
 
             services.AddDbContext<FitnessDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddScoped<CoachRepository>();
-            services.AddScoped<GymRepository>();
-            services.AddScoped<WorkoutRepository>();
+            services.AddScoped<IRepository<Coach>,CoachRepository>();
+            services.AddScoped<IRepository<Gym>,GymRepository>();
+            services.AddScoped<IRepository<Workout>,WorkoutRepository>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

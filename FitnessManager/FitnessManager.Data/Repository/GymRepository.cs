@@ -8,7 +8,7 @@ namespace FintessManager.Data
 {
     public class GymRepository : Repository<Gym>
     {
-        public GymRepository(DbContext context) : base(context) { }
+        public GymRepository(FitnessDbContext context) : base(context) { }
         
     }
 }

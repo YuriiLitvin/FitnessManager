@@ -8,7 +8,7 @@ namespace FintessManager.Data
 {
     public class CoachRepository : Repository<Coach>
     {
-        public CoachRepository(DbContext context) : base(context) { }
+        public CoachRepository(FitnessDbContext context) : base(context) { }
     }
 }
 
