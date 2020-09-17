@@ -34,14 +34,7 @@ namespace FitnessManager.Web.Controllers
             
             if(coaches.Any())
             {
-                var coachModels =  new List<CoachModel>();
-                foreach(var coach in coaches)
-                {
-                    var coachModel = CreateCoachModel(coach);
-                    coachModels.Add(coachModel);
-                }
-                
-                return Ok(coachModels);
+                return Ok(coaches.Select(Map));
             }
             return NoContent();
             
@@ -55,16 +48,16 @@ namespace FitnessManager.Web.Controllers
             if (coaches.Any())
             {
                 var coach = coaches.FirstOrDefault(_ => _.Id == id);
-                var coachModel = CreateCoachModel(coach);
-                return Ok(coachModel);
+                return Ok(Map(coach));
             }
             return NotFound();
-
         }
+
+        
         [HttpPost]
         public ActionResult Post(CoachModel coachModel)
         {
-            var coach = CreateCoach(coachModel);
+            var coach = Map(coachModel);
 
             _coachRepository.Add(coach);
             _fitnessDbContext.SaveChanges();
@@ -72,11 +65,11 @@ namespace FitnessManager.Web.Controllers
             return Created("", coach);
         }
         
-
+        
         [HttpPut]
         public ActionResult Put(CoachModel coachModel)
         {
-            var coach = CreateCoach(coachModel);
+            var coach = Map(coachModel);
             _coachRepository.Update(coach);
             _fitnessDbContext.SaveChanges();
             return Ok();
@@ -90,8 +83,8 @@ namespace FitnessManager.Web.Controllers
             _fitnessDbContext.SaveChanges();
             return Ok();
         }
-        
-        private Coach CreateCoach(CoachModel coachModel)
+
+        private Coach Map(CoachModel coachModel)
         {
             var coach = new Coach
             {
@@ -103,7 +96,7 @@ namespace FitnessManager.Web.Controllers
             };
             return coach;
         }
-        private CoachModel CreateCoachModel(Coach coach)
+        private CoachModel Map(Coach coach)
         {
             var coachModel = new CoachModel
             {
