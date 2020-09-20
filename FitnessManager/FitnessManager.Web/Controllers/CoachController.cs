@@ -7,6 +7,7 @@ using FintessManager.Data.Entity;
 using FitnessManager.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace FitnessManager.Web.Controllers
 {
@@ -32,46 +33,57 @@ namespace FitnessManager.Web.Controllers
         {
             var coaches = _coachRepository.Get();
             
-            if(coaches.Any())
+            if(!coaches.Any())
             {
-                return Ok(coaches.Select(Map));
+                return NoContent();
             }
-            return NoContent();
-            
+            return Ok(coaches.Select(Map));
         }
         
         [HttpGet("{id}")]
         public ActionResult<CoachModel> Get(int id)
         {
             var coaches = _coachRepository.Get();
-
-            if (coaches.Any())
+            var coach = coaches.FirstOrDefault(_ => _.Id == id);
+            
+            if (coach == null)
             {
-                var coach = coaches.FirstOrDefault(_ => _.Id == id);
-                return Ok(Map(coach));
+                return NotFound();
             }
-            return NotFound();
+            
+            return Ok(Map(coach));
         }
 
         
         [HttpPost]
         public ActionResult Post(CoachModel coachModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            
             var coach = Map(coachModel);
-
             _coachRepository.Add(coach);
             _fitnessDbContext.SaveChanges();
-            
+
             return Created("", coach);
         }
         
         
-        [HttpPut]
-        public ActionResult Put(CoachModel coachModel)
+        [HttpPut("{id}")]
+        public ActionResult Put(CoachModel coachModel, int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            
             var coach = Map(coachModel);
+            coach.Id = id;
             _coachRepository.Update(coach);
             _fitnessDbContext.SaveChanges();
+
             return Ok();
         }
 
@@ -79,6 +91,14 @@ namespace FitnessManager.Web.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
+            var coaches = _coachRepository.Get();
+            var coach = coaches.FirstOrDefault(_ => _.Id == id);
+
+            if (coach == null)
+            {
+                return NotFound();
+            }
+              
             _coachRepository.Delete(id);
             _fitnessDbContext.SaveChanges();
             return Ok();
