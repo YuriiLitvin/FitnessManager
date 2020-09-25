@@ -1,5 +1,5 @@
-﻿using FintessManager.Data;
-using FintessManager.Data.Entity;
+﻿using FitnessManager.Data;
+using FitnessManager.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

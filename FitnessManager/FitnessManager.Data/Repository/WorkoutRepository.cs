@@ -1,10 +1,10 @@
-﻿using FintessManager.Data.Entity;
+﻿using FitnessManager.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FintessManager.Data.Repository
+namespace FitnessManager.Data.Repository
 {
     public class WorkoutRepository : Repository<Workout>
     {

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FintessManager.Data;
-using FintessManager.Data.Entity;
+using FitnessManager.Data;
+using FitnessManager.Data.Entity;
 using FitnessManager.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitnessManager.Data", "FitnessManager.Data\FitnessManager.Data.csproj", "{7E019617-0E5F-4FF9-8CFA-E65287628573}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitnessManager.Web", "FitnessManager.Web\FitnessManager.Web.csproj", "{DBD15D1F-F5A1-4118-9D02-A575C8A6666C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitnessManager.Web", "FitnessManager.Web\FitnessManager.Web.csproj", "{DBD15D1F-F5A1-4118-9D02-A575C8A6666C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitnessManager.Web.Tests", "FitnessManager.Web.Tests\FitnessManager.Web.Tests.csproj", "{7864F593-646B-434C-8FC3-DFEED013BD9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DBD15D1F-F5A1-4118-9D02-A575C8A6666C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBD15D1F-F5A1-4118-9D02-A575C8A6666C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBD15D1F-F5A1-4118-9D02-A575C8A6666C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7864F593-646B-434C-8FC3-DFEED013BD9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7864F593-646B-434C-8FC3-DFEED013BD9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7864F593-646B-434C-8FC3-DFEED013BD9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7864F593-646B-434C-8FC3-DFEED013BD9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

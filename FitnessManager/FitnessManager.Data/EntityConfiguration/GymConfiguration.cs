@@ -1,9 +1,9 @@
-﻿using FintessManager.Data.Entity;
+﻿using FitnessManager.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
-namespace FintessManager.Data.EntityConfiguration
+namespace FitnessManager.Data.EntityConfiguration
 {
     public class GymConfiguration : IEntityTypeConfiguration<Gym>
     {

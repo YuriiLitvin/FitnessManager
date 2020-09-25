@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FintessManager.Data.Migrations
+namespace FitnessManager.Data.Migrations
 {
     public partial class MyFirstMigration : Migration
     {

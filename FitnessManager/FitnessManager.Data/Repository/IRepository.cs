@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FintessManager.Data
+namespace FitnessManager.Data
 {
     public interface IRepository<T>
     {

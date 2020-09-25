@@ -1,11 +1,9 @@
-﻿using FintessManager.Data.Entity;
-using FintessManager.Data.EntityConfiguration;
+﻿using FitnessManager.Data.Entity;
+using FitnessManager.Data.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace FintessManager.Data
+
+namespace FitnessManager.Data
 {
     public class FitnessDbContext : DbContext
     {

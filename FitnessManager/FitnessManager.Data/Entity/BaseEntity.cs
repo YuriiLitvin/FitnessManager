@@ -1,9 +1,9 @@
-﻿using FintessManager.Data.Entity;
+﻿using FitnessManager.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FintessManager.Data.Entity
+namespace FitnessManager.Data.Entity
 {
     public abstract class BaseEntity 
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FintessManager.Data.Entity
+namespace FitnessManager.Data.Entity
 {
     public class Coach : BaseEntity
     {

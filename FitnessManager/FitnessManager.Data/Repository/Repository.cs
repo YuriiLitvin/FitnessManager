@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FintessManager.Data.Entity;
+using FitnessManager.Data.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 
-namespace FintessManager.Data
+namespace FitnessManager.Data
 {
     public abstract class Repository<T> : IRepository<T> where T : BaseEntity
     {
