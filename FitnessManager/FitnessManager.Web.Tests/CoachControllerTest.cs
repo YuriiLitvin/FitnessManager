@@ -6,9 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 using System.Net;
-using FitnessManager.Data.Entity;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Text;
+using FitnessManager.Web.Models;
 
 namespace FitnessManager.Web.Tests
 {
@@ -20,10 +21,10 @@ namespace FitnessManager.Web.Tests
 
         public CoachControllerTest()
         {
-            var webHostBuilder = new WebHostBuilder()
-                    .ConfigureAppConfiguration(builder => builder.AddJsonFile("appsettings.json"))
+            var webHostBuilder = new WebHostBuilder().ConfigureAppConfiguration(builder => builder
+                    .AddJsonFile("appsettings.json"))
                     .UseStartup<Startup>();
-            
+
             var server = new TestServer(webHostBuilder);
             
             _client = server.CreateClient();
@@ -35,7 +36,7 @@ namespace FitnessManager.Web.Tests
         public async void CreateCoach()
         {
             // Arrange
-            var coach = new Coach
+            var coach = new CoachModel
             {
                 FirstName = "Ivan",
                 LastName  = "Susanin",
@@ -45,15 +46,15 @@ namespace FitnessManager.Web.Tests
             };
 
             var requestJson = JsonConvert.SerializeObject(coach);
-            
+
             // Act
             var response = await _client.PostAsync(
-                "/api/CoachController", new StringContent(requestJson));
+                "/api/Coach", new StringContent(requestJson, Encoding.UTF8, mediaType: "application/json"));
 
             // Assert
-            Assert.True(response.StatusCode == HttpStatusCode.OK);
+            Assert.True(response.StatusCode == HttpStatusCode.Created);
             var responseJson = await response.Content.ReadAsStringAsync();
-            var responseCoach = JsonConvert.DeserializeObject<Coach>(responseJson);
+            var responseCoach = JsonConvert.DeserializeObject<CoachModel>(responseJson);
             var coachFromDb = _context.Coaches.FirstOrDefault();
 
             Assert.Same(responseCoach, coachFromDb);
