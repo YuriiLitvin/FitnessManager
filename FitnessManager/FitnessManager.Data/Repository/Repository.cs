@@ -34,6 +34,11 @@ namespace FitnessManager.Data
             return _dbSet;
         }
 
+        public T Get(int id)
+        {
+            return _dbSet.FirstOrDefault(_ => _.Id == id);
+        }
+
         public void Update(T entity)
         {
             _dbSet.Update(entity);
