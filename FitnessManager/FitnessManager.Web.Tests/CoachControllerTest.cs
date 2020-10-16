@@ -12,6 +12,7 @@ using System.Text;
 using FitnessManager.Web.Models;
 using System.Collections.Generic;
 using FitnessManager.Data.Entity;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace FitnessManager.Web.Tests
 {
@@ -39,6 +40,68 @@ namespace FitnessManager.Web.Tests
         public async void GetCoaches()
         {
             // Arrange.
+            var coach1 = new Coach
+            {
+                FirstName = "Ioan",
+                LastName = "Susanin",
+                Email = "ivansus@gmail.com",
+                MobileNumber = "07773342",
+                TypeOfTraining = (TypeOfTraining)3
+            };
+            var coach2 = new Coach
+            {
+                FirstName = "Atem",
+                LastName = "Busanin",
+                Email = "artbus@gmail.com",
+                MobileNumber = "0443456",
+                TypeOfTraining = (TypeOfTraining)1
+            };
+
+            var list = new List<Coach>
+            {
+                coach1,
+                coach2
+            };
+
+            _context.Coaches.AddRange(list);
+            _context.SaveChanges();
+            var responseDb = _context.Coaches.ToList();
+
+            // Act.
+            var response = await _client.GetAsync("/api/Coach");
+
+            // Assert.
+            var responseJson = await response.Content.ReadAsStringAsync();
+            var responseCoachModels = JsonConvert.DeserializeObject<List<CoachModel>>(responseJson);
+            
+            Assert.Equal(responseDb.Count,responseCoachModels.Count);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+
+            foreach (var coachModel in responseCoachModels)
+            {
+                Assert.All(responseDb, _ => _.Equals(coachModel));
+            }
+
+        }
+        
+        [Fact(DisplayName = "[Get] check if no content we search")] 
+        public async void GetCoachOrNull()
+        {
+            // Arrange.
+            //var coach = new Coach
+            //{
+            //    FirstName = "Rita",
+            //    LastName = "Rey",
+            //    Email = "rrl@gmail.com",
+            //    MobileNumber = "0555555",
+            //    TypeOfTraining = (TypeOfTraining)0
+            //};
+
+            //_context.Coaches.Add(coach);
+            //_context.SaveChanges();
+
+            var mobileNumber = "1111111";
 
             // Act.
             var response = await _client.GetAsync("/api/Coach");
@@ -47,49 +110,40 @@ namespace FitnessManager.Web.Tests
             var responseJson = await response.Content.ReadAsStringAsync();
             var responseCoachModels = JsonConvert.DeserializeObject<List<CoachModel>>(responseJson);
 
-            var responseDb = _context.Coaches.ToList();
-
-            Assert.True(responseDb.Count == responseCoachModels.Count);
-            Assert.True(response.StatusCode == HttpStatusCode.OK);
-
-
-            foreach (var coachModel in responseCoachModels)
-            {
-                responseDb.Any(_ => _.Equals(coachModel));
-            }
-
-        }
-        
-        [Fact(DisplayName = "[Get] check if db is empty")] // DOESN'T WORK
-        public async void GetCoachOrNull()
-        {
-            // Arrange.
-
-            // Act.
-            var response = await _client.GetStringAsync("/api/Coach");
-
-            // Assert.
-
-            Assert.False(response == null);
+            Assert.DoesNotContain(responseCoachModels, _ => _.MobileNumber.Contains(mobileNumber));
+            //Assert.Equal(HttpStatusCode.NoContent,response.StatusCode);
         }
 
         [Fact(DisplayName = "[Get] get Coach by Id")] 
         public async void GetCoachById()
         {
             // Arrange.
-            int coachId = 3;
+            var coach = new Coach
+            {
+                FirstName = "Rob",
+                LastName = "Murrey",
+                Email = "bmarl@gmail.com",
+                MobileNumber = "0342895834",
+                TypeOfTraining = (TypeOfTraining)2
+            };
+
+            _context.Coaches.Add(coach);
+            _context.SaveChanges();
+            var responseDb = _context.Coaches.ToList();
+
+            var coachId = responseDb.Where(_ => _.FirstName == coach.FirstName).Max(_ => _.Id);
+
             // Act.
-            var response = await _client.GetAsync("/api/Coach/3");
+            var response = await _client.GetAsync($"/api/Coach/{coachId}");
             
             // Assert.
             var responseJson = await response.Content.ReadAsStringAsync();
             var responseCoachModel = JsonConvert.DeserializeObject<CoachModel>(responseJson);
             var responseCoach = Map(responseCoachModel);
 
-            var responseDb = _context.Coaches.FirstOrDefault(_ => _.Id == coachId);
 
-            Assert.True(response.StatusCode == HttpStatusCode.OK);
-            Assert.True(responseDb.Equals(responseCoach));
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(coach.Equals(responseCoach));
 
         }
 
@@ -97,12 +151,25 @@ namespace FitnessManager.Web.Tests
         public async void GetCoachByInvalidId()
         {
             // Arrange.
+            var coach = new Coach
+            {
+                FirstName = "Dona",
+                LastName = "Barbey",
+                Email = "db@gmail.com",
+                MobileNumber = "0342895834",
+                TypeOfTraining = (TypeOfTraining)0
+            };
 
+            _context.Coaches.Add(coach);
+            _context.SaveChanges();
+            var responseDb = _context.Coaches.ToList();
+
+            var coachId = responseDb.Where(_ => _.FirstName == coach.FirstName).Max(_ => _.Id);
             // Act.
-            var response = await _client.GetAsync("/api/Coach/40");
+            var response = await _client.GetAsync($"/api/Coach/{coachId + 7}");
 
             // Assert.
-            Assert.True(response.StatusCode == HttpStatusCode.NotFound);
+            Assert.Equal(HttpStatusCode.NotFound,response.StatusCode);
         }
         #endregion
 
@@ -120,25 +187,24 @@ namespace FitnessManager.Web.Tests
                 MobileNumber = "07773342",
                 TypeOfTraining = (TypeOfTraining)3
             };
-
-            
             var requestJson = JsonConvert.SerializeObject(coachModel);
 
+           
+
+            
             // Act.
             var response = await _client.PostAsync(
                 "/api/Coach", new StringContent(
                     requestJson, Encoding.UTF8, mediaType: "application/json"));
 
             // Assert.
-            
             var responseJson = await response.Content.ReadAsStringAsync();
             var responseCoach = JsonConvert.DeserializeObject<Coach>(responseJson);
-            
-            var responseDb = _context.Coaches.FirstOrDefault(_ => _.LastName.Contains("Sus"));
-            
-            
-            Assert.True(response.StatusCode == HttpStatusCode.Created);
-            Assert.True(responseDb.Equals(responseCoach)); 
+
+            var responseDb = _context.Coaches.FirstOrDefault(_ => _.LastName == coachModel.LastName);
+
+            Assert.Equal(HttpStatusCode.Created,response.StatusCode);
+            Assert.Equal(responseDb,responseCoach); 
             
         }
 
@@ -229,9 +295,9 @@ namespace FitnessManager.Web.Tests
         public async void DeleteCoachByInvalidId()
         {
             // Arrange.
-
+            int coachId = 42;
             // Act.
-            var response = await _client.DeleteAsync("/api/Coach/28");
+            var response = await _client.DeleteAsync($"/api/Coach/{coachId}");
 
             // Assert.
             Assert.True(response.StatusCode == HttpStatusCode.OK);
