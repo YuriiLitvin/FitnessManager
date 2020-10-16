@@ -13,6 +13,7 @@ using FitnessManager.Web.Models;
 using System.Collections.Generic;
 using FitnessManager.Data.Entity;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace FitnessManager.Web.Tests
 {
@@ -85,33 +86,18 @@ namespace FitnessManager.Web.Tests
 
         }
         
-        [Fact(DisplayName = "[Get] check if no content we search")] 
-        public async void GetCoachOrNull()
+        [Fact(DisplayName = "[Get] check if no content")] 
+        public async void GetNoContent()
         {
-            // Arrange.
-            //var coach = new Coach
-            //{
-            //    FirstName = "Rita",
-            //    LastName = "Rey",
-            //    Email = "rrl@gmail.com",
-            //    MobileNumber = "0555555",
-            //    TypeOfTraining = (TypeOfTraining)0
-            //};
-
-            //_context.Coaches.Add(coach);
-            //_context.SaveChanges();
-
-            var mobileNumber = "1111111";
+            var list = _context.Coaches.ToList();
+            _context.Coaches.RemoveRange(list);
+            _context.SaveChanges();
 
             // Act.
             var response = await _client.GetAsync("/api/Coach");
 
             // Assert.
-            var responseJson = await response.Content.ReadAsStringAsync();
-            var responseCoachModels = JsonConvert.DeserializeObject<List<CoachModel>>(responseJson);
-
-            Assert.DoesNotContain(responseCoachModels, _ => _.MobileNumber.Contains(mobileNumber));
-            //Assert.Equal(HttpStatusCode.NoContent,response.StatusCode);
+            Assert.Equal(HttpStatusCode.NoContent,response.StatusCode);
         }
 
         [Fact(DisplayName = "[Get] get Coach by Id")] 
@@ -129,9 +115,8 @@ namespace FitnessManager.Web.Tests
 
             _context.Coaches.Add(coach);
             _context.SaveChanges();
-            var responseDb = _context.Coaches.ToList();
 
-            var coachId = responseDb.Where(_ => _.FirstName == coach.FirstName).Max(_ => _.Id);
+            var coachId = coach.Id;
 
             // Act.
             var response = await _client.GetAsync($"/api/Coach/{coachId}");
@@ -151,22 +136,9 @@ namespace FitnessManager.Web.Tests
         public async void GetCoachByInvalidId()
         {
             // Arrange.
-            var coach = new Coach
-            {
-                FirstName = "Dona",
-                LastName = "Barbey",
-                Email = "db@gmail.com",
-                MobileNumber = "0342895834",
-                TypeOfTraining = (TypeOfTraining)0
-            };
-
-            _context.Coaches.Add(coach);
-            _context.SaveChanges();
-            var responseDb = _context.Coaches.ToList();
-
-            var coachId = responseDb.Where(_ => _.FirstName == coach.FirstName).Max(_ => _.Id);
+            int invalidCoachId = 60;
             // Act.
-            var response = await _client.GetAsync($"/api/Coach/{coachId + 7}");
+            var response = await _client.GetAsync($"/api/Coach/{invalidCoachId}");
 
             // Assert.
             Assert.Equal(HttpStatusCode.NotFound,response.StatusCode);
@@ -188,10 +160,8 @@ namespace FitnessManager.Web.Tests
                 TypeOfTraining = (TypeOfTraining)3
             };
             var requestJson = JsonConvert.SerializeObject(coachModel);
+            var coach = Map(coachModel);
 
-           
-
-            
             // Act.
             var response = await _client.PostAsync(
                 "/api/Coach", new StringContent(
@@ -201,14 +171,13 @@ namespace FitnessManager.Web.Tests
             var responseJson = await response.Content.ReadAsStringAsync();
             var responseCoach = JsonConvert.DeserializeObject<Coach>(responseJson);
 
-            var responseDb = _context.Coaches.FirstOrDefault(_ => _.LastName == coachModel.LastName);
 
             Assert.Equal(HttpStatusCode.Created,response.StatusCode);
-            Assert.Equal(responseDb,responseCoach); 
+            Assert.Equal(coach,responseCoach); 
             
         }
 
-        [Fact(DisplayName = "[Post] create Coach with notValid data")]
+        [Fact(DisplayName = "[Post] create Coach with invalid data")]
         public async void CreateCoachWithNotValidData()
         {
             // Arrange.
@@ -228,7 +197,7 @@ namespace FitnessManager.Web.Tests
                 "/api/Coach", new StringContent(requestJson, Encoding.UTF8, mediaType: "application/json"));
 
             // Assert.
-            Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
+            Assert.Equal(HttpStatusCode.BadRequest,response.StatusCode);
             
         }
         #endregion
@@ -241,25 +210,25 @@ namespace FitnessManager.Web.Tests
             // Arrange.
             var coachModel = new CoachModel
             {
-                FirstName = "Bezhamin",
-                LastName = "Suleimanin",
+                FirstName = "Bezh",
+                LastName = "Sulenin",
                 Email = "besu@gmail.com",
                 MobileNumber = "06663342",
                 TypeOfTraining = (TypeOfTraining)2
             };
 
-            var coach = Map(coachModel);
-            var requestJson = JsonConvert.SerializeObject(coach);
-
+            var requestCoach = Map(coachModel);
+            var requestJson = JsonConvert.SerializeObject(requestCoach);
+            
+            var coach = _context.Coaches.FirstOrDefault(_ => _ != null);
+            var coachId = coach.Id;
+            
             // Act.
-            var response = await _client.PutAsync(
-                "/api/Coach/36", new StringContent(requestJson, Encoding.UTF8, mediaType: "application/json"));
+            var response = await _client.PutAsync($"/api/Coach/{coachId}",
+                new StringContent(requestJson, Encoding.UTF8, mediaType: "application/json"));
 
             // Assert.
-            var responseDb = _context.Coaches.FirstOrDefault(_ => _.LastName.Contains("Sulei"));
-
-            Assert.True(response.StatusCode == HttpStatusCode.OK);
-            Assert.True(responseDb.Equals(coach));
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         }
 
@@ -276,47 +245,52 @@ namespace FitnessManager.Web.Tests
                 TypeOfTraining = (TypeOfTraining)10
             };
 
-            var coach = Map(coachModel);
-            var requestJson = JsonConvert.SerializeObject(coach);
-
+            var requestCoach = Map(coachModel);
+            var requestJson = JsonConvert.SerializeObject(requestCoach);
+            
+            var coach = _context.Coaches.FirstOrDefault(_ => _ != null);
+            var coachId = coach.Id;
             // Act.
-            var response = await _client.PutAsync(
-                "/api/Coach/36", new StringContent(requestJson, Encoding.UTF8, mediaType: "application/json"));
+            var response = await _client.PutAsync($"/api/Coach/{coachId}",
+                new StringContent(requestJson, Encoding.UTF8, mediaType: "application/json"));
 
             // Assert.
-            Assert.True(response.StatusCode == HttpStatusCode.BadRequest);
+            Assert.Equal(HttpStatusCode.BadRequest,response.StatusCode);
 
         }
         #endregion
 
 
         #region DELETE tests
-        [Fact(DisplayName = "[Delete] delete Coach by Id")] 
-        public async void DeleteCoachByInvalidId()
+        [Fact(DisplayName = "[Delete] delete Coach by Id")]
+        public async void DeleteCoachById()
         {
             // Arrange.
-            int coachId = 42;
+            var coach = _context.Coaches.FirstOrDefault(_ => _ != null);
+            var coachId = coach.Id;
             // Act.
             var response = await _client.DeleteAsync($"/api/Coach/{coachId}");
 
             // Assert.
-            Assert.True(response.StatusCode == HttpStatusCode.OK);
-
-
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
+
+
         [Fact(DisplayName = "[Delete] delete Coach by invalid Id")]
-        public async void DeleteCoachById()
+        public async void DeleteCoachByInvalidId()
         {
             // Arrange.
-
+            var coachId = _context.Coaches.Max(_=>_.Id);
+            var invalidCoachId = coachId + 100;
             // Act.
-            var response = await _client.DeleteAsync("/api/Coach/44");
+            var response = await _client.DeleteAsync($"/api/Coach/{invalidCoachId}");
 
             // Assert.
-            Assert.True(response.StatusCode == HttpStatusCode.NotFound);
+            
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
         }
-
-
+        
         #endregion
 
         
