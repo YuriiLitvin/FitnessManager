@@ -47,7 +47,7 @@ namespace FitnessManager.Web.Tests
                 LastName = "Susanin",
                 Email = "ivansus@gmail.com",
                 MobileNumber = "07773342",
-                TypeOfTraining = (TypeOfTraining)3
+                TypeOfTraining = TypeOfTraining.Fitness
             };
             var coach2 = new Coach
             {
@@ -55,7 +55,7 @@ namespace FitnessManager.Web.Tests
                 LastName = "Busanin",
                 Email = "artbus@gmail.com",
                 MobileNumber = "0443456",
-                TypeOfTraining = (TypeOfTraining)1
+                TypeOfTraining = TypeOfTraining.Dances
             };
 
             var list = new List<Coach>
@@ -110,7 +110,7 @@ namespace FitnessManager.Web.Tests
                 LastName = "Murrey",
                 Email = "bmarl@gmail.com",
                 MobileNumber = "0342895834",
-                TypeOfTraining = (TypeOfTraining)2
+                TypeOfTraining = TypeOfTraining.PowerLifting
             };
 
             _context.Coaches.Add(coach);
@@ -128,7 +128,7 @@ namespace FitnessManager.Web.Tests
 
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.True(coach.Equals(responseCoach));
+            Assert.Equal(coach,responseCoach);
 
         }
 
@@ -136,7 +136,8 @@ namespace FitnessManager.Web.Tests
         public async void GetCoachByInvalidId()
         {
             // Arrange.
-            int invalidCoachId = 60;
+            var coachId = _context.Coaches.Max(_ => _.Id);
+            var invalidCoachId = coachId + 100;
             // Act.
             var response = await _client.GetAsync($"/api/Coach/{invalidCoachId}");
 
@@ -157,7 +158,7 @@ namespace FitnessManager.Web.Tests
                 LastName  = "Susanin",
                 Email = "ivansus@gmail.com",
                 MobileNumber = "07773342",
-                TypeOfTraining = (TypeOfTraining)3
+                TypeOfTraining = TypeOfTraining.PowerLifting
             };
             var requestJson = JsonConvert.SerializeObject(coachModel);
             var coach = Map(coachModel);
@@ -214,13 +215,13 @@ namespace FitnessManager.Web.Tests
                 LastName = "Sulenin",
                 Email = "besu@gmail.com",
                 MobileNumber = "06663342",
-                TypeOfTraining = (TypeOfTraining)2
+                TypeOfTraining = TypeOfTraining.Fitness
             };
 
             var requestCoach = Map(coachModel);
             var requestJson = JsonConvert.SerializeObject(requestCoach);
             
-            var coach = _context.Coaches.FirstOrDefault(_ => _ != null);
+            var coach = _context.Coaches.First();
             var coachId = coach.Id;
             
             // Act.
@@ -248,7 +249,7 @@ namespace FitnessManager.Web.Tests
             var requestCoach = Map(coachModel);
             var requestJson = JsonConvert.SerializeObject(requestCoach);
             
-            var coach = _context.Coaches.FirstOrDefault(_ => _ != null);
+            var coach = _context.Coaches.First();
             var coachId = coach.Id;
             // Act.
             var response = await _client.PutAsync($"/api/Coach/{coachId}",
@@ -266,7 +267,7 @@ namespace FitnessManager.Web.Tests
         public async void DeleteCoachById()
         {
             // Arrange.
-            var coach = _context.Coaches.FirstOrDefault(_ => _ != null);
+            var coach = _context.Coaches.First();
             var coachId = coach.Id;
             // Act.
             var response = await _client.DeleteAsync($"/api/Coach/{coachId}");
