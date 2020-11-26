@@ -6,7 +6,6 @@ namespace FitnessManager.Data.Entity
 {
     public class Gym : BaseEntity
     {
-
         public string Title { get; set; }
 
         public int TrainingPeolpeCount { get; set; }

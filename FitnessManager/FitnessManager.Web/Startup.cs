@@ -33,6 +33,18 @@ namespace FitnessManager.Web
         {
             services.AddControllers();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "any",
+
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                    });
+            }); 
+
             var connectionString = Configuration.GetConnectionString("FitnessDb");
 
             services.AddDbContext<FitnessDbContext>(options => options.UseSqlServer(connectionString));
@@ -48,6 +60,8 @@ namespace FitnessManager.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseCors("any");
             }
 
             app.UseHttpsRedirection();

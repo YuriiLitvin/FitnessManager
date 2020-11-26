@@ -107,6 +107,7 @@ namespace FitnessManager.Web.Controllers
         {
             var coach = new Coach
             {
+                Id = coachModel.Id,
                 FirstName = coachModel.FirstName,
                 LastName = coachModel.LastName,
                 Email = coachModel.Email,
@@ -119,6 +120,7 @@ namespace FitnessManager.Web.Controllers
         {
             var coachModel = new CoachModel
             {
+                Id = coach.Id,
                 FirstName = coach.FirstName,
                 LastName = coach.LastName,
                 Email = coach.Email,

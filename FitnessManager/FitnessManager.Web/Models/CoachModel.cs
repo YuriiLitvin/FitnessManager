@@ -11,6 +11,9 @@ namespace FitnessManager.Web.Models
 {
     public class CoachModel 
     {
+        [StringLength(255)]
+        public int Id { get; set; }
+
         [Required, StringLength(255)]
         public string FirstName { get; set; }
 
