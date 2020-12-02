@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using FitnessManager.Data;
 using FitnessManager.Data.Entity;
 using FitnessManager.Web.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace FitnessManager.Web.Controllers
 {
@@ -124,7 +122,7 @@ namespace FitnessManager.Web.Controllers
                 FirstName = coach.FirstName,
                 LastName = coach.LastName,
                 Email = coach.Email,
-                MobileNumber = coach.MobileNumber,
+                MobileNumber = coach.MobileNumber, 
                 TypeOfTraining = coach.TypeOfTraining
             };
             return coachModel;

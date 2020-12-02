@@ -1,17 +1,12 @@
 ﻿using FitnessManager.Data;
-using FitnessManager.Data.Entity;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 
 namespace FitnessManager.Web.Models
 {
     public class CoachModel 
     {
-        [StringLength(255)]
         public int Id { get; set; }
 
         [Required, StringLength(255)]
